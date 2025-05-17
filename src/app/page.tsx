@@ -1,11 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 
+// ✅ Type for each affirmation
+type Affirmation = {
+  type: string;
+  content: string;
+};
+
 export default function Home() {
-  const [affirmations, setAffirmations] = useState([]);
+  // ✅ Array of affirmations, each with type + content
+  const [affirmations, setAffirmations] = useState<Affirmation[]>([]);
   const [newAffirmation, setNewAffirmation] = useState("");
 
-  // Load affirmations from localStorage on page load
+  // ✅ Load saved affirmations when page first loads
   useEffect(() => {
     const saved = localStorage.getItem("affirmations");
     if (saved) {
@@ -13,20 +20,27 @@ export default function Home() {
     }
   }, []);
 
-  // Save affirmations to localStorage on change
+  // ✅ Save affirmations to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("affirmations", JSON.stringify(affirmations));
   }, [affirmations]);
 
+  // ✅ Add a new affirmation
   const addAffirmation = () => {
     if (newAffirmation.trim() === "") return;
-    setAffirmations([{ type: "text", content: newAffirmation }, ...affirmations]);
+    const newEntry: Affirmation = {
+      type: "text",
+      content: newAffirmation,
+    };
+    setAffirmations([newEntry, ...affirmations]);
     setNewAffirmation("");
   };
 
   return (
     <main className="p-6 min-h-screen" style={{ backgroundColor: "#f4b9b8" }}>
-      <h1 className="text-4xl font-bold mb-6 text-center text-white drop-shadow-lg">🌻 My Affirmations</h1>
+      <h1 className="text-4xl font-bold mb-6 text-center text-white drop-shadow-lg">
+        🌻 My Affirmations
+      </h1>
 
       <div className="max-w-xl mx-auto mb-6">
         <input
